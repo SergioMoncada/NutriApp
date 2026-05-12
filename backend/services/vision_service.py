@@ -2,8 +2,8 @@ import httpx, os, base64
 from dotenv import load_dotenv
 load_dotenv()
 
-CLARIFAI_USER_ID = "mje155424peu"
-CLARIFAI_APP_ID = "nutriapp2"
+CLARIFAI_USER_ID = "26d003uwatbx"
+CLARIFAI_APP_ID = "nutriapp"
 
 async def identificar_alimento(imagen_bytes: bytes) -> str:
     imagen_b64 = base64.b64encode(imagen_bytes).decode("utf-8")
