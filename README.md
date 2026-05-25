@@ -23,6 +23,7 @@
 
 ## Instalacíon ⚒️
 
+**IMPORTANTE:** Utilizar la version Expo Go v.55 AQUI --> https://expo.dev/go
 Abre la terminal.
 ```bash
 git clone https://github.com/SergioMoncada/NutriApp.git
