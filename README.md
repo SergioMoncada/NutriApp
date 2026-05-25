@@ -24,9 +24,12 @@
 ## Instalacíon ⚒️
 
 **IMPORTANTE:** Utilizar la version Expo Go v.55 AQUI --> https://expo.dev/go
+
 Abre la terminal.
 ```bash
 git clone https://github.com/SergioMoncada/NutriApp.git
+cd frontend
+cd nutriapp-v4
 npm install
 npx expo install expo-local-authentication
 npx expo install expo-sensors
