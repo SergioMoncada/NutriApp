@@ -14,6 +14,105 @@ CLARIFAI_USER_ID = "26d003uwatbx"
 CLARIFAI_APP_ID = "nutriapp"
 # Define el ID de la aplicación de Clarifai.
 
+async def traducir_alimento(nombre_ingles: str) -> str:
+    """
+    Traduce el nombre del alimento del inglés al español
+    usando un diccionario básico. Si no está en el diccionario
+    lo retorna tal cual.
+    """
+    traducciones = {
+        "apple": "manzana",
+        "banana": "banano",
+        "orange": "naranja",
+        "shrimp": "camarón",
+        "fish": "pescado",
+        "chicken": "pollo",
+        "beef": "carne de res",
+        "pork": "cerdo",
+        "rice": "arroz",
+        "bread": "pan",
+        "egg": "huevo",
+        "milk": "leche",
+        "cheese": "queso",
+        "tomato": "tomate",
+        "lettuce": "lechuga",
+        "potato": "papa",
+        "carrot": "zanahoria",
+        "onion": "cebolla",
+        "garlic": "ajo",
+        "pizza": "pizza",
+        "pasta": "pasta",
+        "soup": "sopa",
+        "salad": "ensalada",
+        "burger": "hamburguesa",
+        "sandwich": "sándwich",
+        "sushi": "sushi",
+        "taco": "taco",
+        "chocolate": "chocolate",
+        "cake": "torta",
+        "cookie": "galleta",
+        "coffee": "café",
+        "tea": "té",
+        "juice": "jugo",
+        "strawberry": "fresa",
+        "grape": "uva",
+        "watermelon": "sandía",
+        "pineapple": "piña",
+        "mango": "mango",
+        "avocado": "aguacate",
+        "corn": "maíz",
+        "broccoli": "brócoli",
+        "spinach": "espinaca",
+        "mushroom": "champiñón",
+        "seafood": "mariscos",
+        "prawn": "langostino",
+        "crab": "cangrejo",
+        "lobster": "langosta",
+        "salmon": "salmón",
+        "tuna": "atún",
+        "meat": "carne",
+        "steak": "bistec",
+        "ham": "jamón",
+        "bacon": "tocino",
+        "sausage": "salchicha",
+        "yogurt": "yogur",
+        "butter": "mantequilla",
+        "cream": "crema",
+        "ice cream": "helado",
+        "waffle": "waffle",
+        "pancake": "panqueque",
+        "oatmeal": "avena",
+        "cereal": "cereal",
+        "lemon": "limón",
+        "lime": "lima",
+        "peach": "durazno",
+        "pear": "pera",
+        "cherry": "cereza",
+        "coconut": "coco",
+        "almond": "almendra",
+        "walnut": "nuez",
+        "peanut": "maní",
+        "bean": "frijol",
+        "lentil": "lenteja",
+        "chickpea": "garbanzo",
+        "tofu": "tofu",
+        "noodle": "fideos",
+        "dumpling": "empanada",
+        "ceviche": "ceviche",
+        "chili": "ají",
+        "basil": "albahaca",
+        "pepper": "pimiento",
+        "cucumber": "pepino",
+        "zucchini": "calabacín",
+        "eggplant": "berenjena",
+    }
+    
+    # Buscar en el diccionario (insensible a mayúsculas)
+    return traducciones.get(nombre_ingles.lower(), nombre_ingles)
+
+
+
+
 async def identificar_alimento(imagen_bytes: bytes) -> str:
     imagen_b64 = base64.b64encode(imagen_bytes).decode("utf-8")
     # Convierte los bytes de la imagen a una cadena Base64 para enviarla a la API.
@@ -62,5 +161,6 @@ async def identificar_alimento(imagen_bytes: bytes) -> str:
         return "alimento no identificado"
     # Si no hay conceptos identificados, retorna un mensaje de no identificación.
 
-    return conceptos[0]["name"]
+    nombre_ingles = conceptos[0]["name"]
+    return await traducir_alimento(nombre_ingles)
     # Devuelve el nombre del primer concepto reconocido como el alimento detectado.
