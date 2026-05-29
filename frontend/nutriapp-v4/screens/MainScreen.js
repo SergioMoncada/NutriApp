@@ -9,10 +9,10 @@ const BACKEND_URL = 'https://columellate-supplementally-rachel.ngrok-free.dev';
 
 // ── Componente principal ───────────────────────────────────────────
 export default function MainScreen({ route, navigation }) {
-  
+
   // Obtener el username que viene desde LoginScreen
   const username = route?.params?.username || null;
-  
+
   const [imagen, setImagen] = useState(null);
   const [resultado, setResultado] = useState(null);
   const [cargando, setCargando] = useState(false);
@@ -62,7 +62,7 @@ export default function MainScreen({ route, navigation }) {
         type: 'image/jpeg',
         name: 'foto.jpg',
       });
-      
+
       // Agregar el username si está disponible para guardar en historial
       const url = username
         ? `${BACKEND_URL}/analyze?username=${encodeURIComponent(username)}`
@@ -73,7 +73,7 @@ export default function MainScreen({ route, navigation }) {
         body: formData,
         headers: { 'ngrok-skip-browser-warning': 'true' }
       });
-      
+
       const datos = await respuesta.json();
       setResultado(datos);
     } catch (e) {
@@ -186,16 +186,57 @@ export default function MainScreen({ route, navigation }) {
           {/* Tarjeta de recetas sugeridas por IA */}
           {resultado.recetas && resultado.recetas.length > 0 && (
             <View style={styles.tarjetaRecetas}>
-              <Text style={styles.recetasTitulo}>
-                🍳 Recetas sugeridas
-              </Text>
+              <Text style={styles.recetasTitulo}>🍳 Recetas sugeridas</Text>
               <Text style={styles.recetasSubtitulo}>
-                Ideas para cocinar con {resultado.alimento_detectado}
+                Toca una receta para ver cómo prepararla
               </Text>
+
               {resultado.recetas.map((receta, index) => (
-                <View key={index} style={styles.itemReceta}>
-                  <Text style={styles.recetaNumero}>{String(index + 1)}</Text>
-                  <Text style={styles.recetaNombre}>{receta}</Text>
+                <View key={index} style={styles.recetaContenedor}>
+
+                  {/* Botón de la receta */}
+                  <TouchableOpacity
+                    style={styles.itemReceta}
+                    onPress={() => setIngredientesAbiertos(prev => ({
+                      ...prev,
+                      [index]: !prev[index]
+                    }))}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.recetaNumero}>{String(index + 1)}</Text>
+                    <Text style={styles.recetaNombre}>{receta.nombre}</Text>
+                    <Text style={styles.recetaFlecha}>
+                      {ingredientesAbiertos[index] ? '▲' : '▼'}
+                    </Text>
+                  </TouchableOpacity>
+
+                  {/* Panel expandible con ingredientes y pasos */}
+                  {ingredientesAbiertos[index] && (
+                    <View style={styles.panelReceta}>
+
+                      {/* Ingredientes */}
+                      <Text style={styles.panelTitulo}>🛒 Ingredientes:</Text>
+                      {receta.ingredientes.map((ing, i) => (
+                        <View key={i} style={styles.itemIngrediente}>
+                          <Text style={styles.bullet}>•</Text>
+                          <Text style={styles.textoIngrediente}>{ing}</Text>
+                        </View>
+                      ))}
+
+                      {/* Pasos */}
+                      <Text style={[styles.panelTitulo, { marginTop: 15 }]}>
+                        👨‍🍳 Preparación:
+                      </Text>
+                      {receta.pasos.map((paso, i) => (
+                        <View key={i} style={styles.itemPaso}>
+                          <View style={styles.numeroPaso}>
+                            <Text style={styles.numeroTexto}>{String(i + 1)}</Text>
+                          </View>
+                          <Text style={styles.textoPaso}>{paso}</Text>
+                        </View>
+                      ))}
+                    </View>
+                  )}
                 </View>
               ))}
             </View>
@@ -208,6 +249,71 @@ export default function MainScreen({ route, navigation }) {
 
 // ── Estilos ────────────────────────────────────────────────────────
 const styles = StyleSheet.create({
+  recetaContenedor: {
+  marginBottom: 8,
+},
+recetaFlecha: {
+  fontSize: 12,
+  color: '#999',
+  marginLeft: 8,
+},
+panelReceta: {
+  backgroundColor: '#F1F8E9',
+  borderRadius: 16,
+  padding: 16,
+  borderLeftWidth: 3,
+  borderLeftColor: '#4CAF50',
+  marginTop: 4,
+},
+panelTitulo: {
+  fontSize: 14,
+  fontWeight: '800',
+  color: '#2E7D32',
+  marginBottom: 10,
+  textTransform: 'uppercase',
+  letterSpacing: 0.5,
+},
+itemIngrediente: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  paddingVertical: 3,
+},
+bullet: {
+  fontSize: 16,
+  color: '#4CAF50',
+  marginRight: 8,
+  fontWeight: 'bold',
+},
+textoIngrediente: {
+  fontSize: 14,
+  color: '#444',
+},
+itemPaso: {
+  flexDirection: 'row',
+  alignItems: 'flex-start',
+  paddingVertical: 6,
+  gap: 10,
+},
+numeroPaso: {
+  width: 24,
+  height: 24,
+  backgroundColor: '#4CAF50',
+  borderRadius: 12,
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginTop: 1,
+},
+numeroTexto: {
+  color: '#fff',
+  fontSize: 12,
+  fontWeight: '800',
+},
+textoPaso: {
+  fontSize: 14,
+  color: '#333',
+  flex: 1,
+  lineHeight: 20,
+},
   contenedor: {
     flexGrow: 1,
     backgroundColor: '#F8FAF8',
